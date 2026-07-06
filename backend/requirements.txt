@@ -1,0 +1,6 @@
+# Python dependencies for the SVD backend.
+# Install with:  pip install -r requirements.txt
+flask
+flask-cors
+numpy
+pillow

@@ -1,0 +1,23 @@
+<!doctype html>
+<!--
+  index.html
+  ---------------------------------------------------------------------------
+  The single HTML page of our Single Page Application (SPA).
+  React takes over the empty <div id="root"> below and renders the entire UI
+  into it with JavaScript. Page "navigation" (Upload -> View) is handled by
+  React Router in the browser - the server never reloads the page.
+  ---------------------------------------------------------------------------
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SVD Image Compression</title>
+  </head>
+  <body>
+    <!-- React mounts the whole app inside this div (see src/main.jsx) -->
+    <div id="root"></div>
+    <!-- Entry point of the app; Vite compiles the JSX for the browser -->
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

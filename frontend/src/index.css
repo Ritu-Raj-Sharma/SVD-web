@@ -1,0 +1,282 @@
+/* src/index.css
+   ---------------------------------------------------------------------------
+   Global styles. Light theme, simple flat colors (no gradients).
+   --------------------------------------------------------------------------- */
+
+/* CSS variables = one place to change the theme later. */
+:root {
+  --bg: #f5f6f8;          /* light page background */
+  --surface: #ffffff;     /* cards / drop zone background */
+  --border: #dfe3ea;      /* subtle borders */
+  --text: #1f2430;        /* main text */
+  --text-dim: #6b7280;    /* secondary text */
+  --accent: #2f6fed;      /* buttons / highlights (single flat blue) */
+  --accent-hover: #235bd0;
+  --good: #188a53;        /* green for the "storage saved" number */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+}
+
+/* Centers each page's content in a vertical column. */
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Wider variant for the side-by-side comparison page. */
+.page--wide {
+  max-width: 1000px;
+}
+
+.header {
+  text-align: center;
+}
+
+/* Plain, single-color heading — no gradient. */
+.header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.subtitle {
+  color: var(--text-dim);
+  margin-top: 8px;
+}
+
+/* --- Upload page: drop zone ---------------------------------------------- */
+
+.dropzone {
+  width: 100%;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  overflow: hidden;
+}
+
+.dropzone:hover,
+.dropzone--active {
+  border-color: var(--accent);
+  background: #f0f4ff;
+}
+
+.dropzone__hint {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 24px;
+}
+
+.dropzone__icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.dropzone__formats {
+  font-size: 0.85rem;
+  margin-top: 6px;
+  opacity: 0.8;
+}
+
+.dropzone__preview {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+}
+
+.filename {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+/* --- Buttons --------------------------------------------------------------- */
+
+.btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 40px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Secondary button = outlined style, used for "upload a new image". */
+.btn--secondary {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+
+.btn--secondary:hover {
+  background: #eef3fe;
+}
+
+/* --- View page: side-by-side comparison ------------------------------------ */
+
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;  /* two equal columns */
+  gap: 16px;
+  width: 100%;
+}
+
+/* Stack the two images vertically on narrow screens (phones). */
+@media (max-width: 700px) {
+  .compare {
+    grid-template-columns: 1fr;
+  }
+}
+
+.compare__card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.compare__card img {
+  width: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.compare__card figcaption {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* --- Slider ----------------------------------------------------------------- */
+
+.slider-block {
+  width: 100%;
+  max-width: 640px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.slider-block label {
+  font-size: 1rem;
+}
+
+.slider-block input[type='range'] {
+  width: 100%;
+  accent-color: var(--accent); /* colors the native slider thumb/track */
+  cursor: pointer;
+}
+
+.slider-block__ends {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+
+/* --- Storage savings panel --------------------------------------------------- */
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.stats__item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 24px;
+  min-width: 180px;
+  flex: 1;
+  max-width: 300px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stats__value {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.stats__value--good {
+  color: var(--good);
+}
+
+.stats__label {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.stats__note {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  text-align: center;
+  max-width: 640px;
+}
+
+/* --- Misc ------------------------------------------------------------------- */
+
+.error {
+  color: #b3261e;
+  text-align: center;
+}
+
+/* Simple spinning circle shown while the backend computes the SVD. */
+.spinner {
+  width: 44px;
+  height: 44px;
+  border: 4px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

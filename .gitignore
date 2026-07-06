@@ -1,0 +1,15 @@
+# --- Node / frontend ---------------------------------------------------------
+# Installed packages: huge, machine-specific, regenerated with `npm install`.
+node_modules/
+# Production build output: regenerated with `npm run build`.
+frontend/dist/
+
+# --- Python / backend ----------------------------------------------------------
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# --- OS / editor junk -----------------------------------------------------------
+.DS_Store
+.vscode/
