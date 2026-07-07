@@ -14,10 +14,9 @@ export default defineConfig({
   plugins: [react()],
 
   server: {
-    // DEV PROXY: when the React app (port 5173) calls fetch('/api/...'),
-    // Vite forwards the request to the Flask backend on port 5000.
-    // This avoids CORS headaches and means the frontend code can use the
-    // same relative '/api' path in development AND in production (Vercel).
+    // DEV PROXY: when the React app calls fetch('/api/...'),
+    // Vite forwards the request to the Flask backend.
+    // This avoids CORS headaches.
     proxy: {
       '/api': 'http://127.0.0.1:5000',
     },

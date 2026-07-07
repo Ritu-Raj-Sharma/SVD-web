@@ -43,10 +43,11 @@ The expensive SVD runs **once per upload**. The backend then reconstructs the im
 │   │   │   └── ViewPage.jsx     # Page 2: slider, side-by-side view, savings
 │   │   └── index.css       # Light theme styles
 │   └── vite.config.js      # Dev proxy: /api → Flask on port 5000
-├── backend/
-│   ├── app.py              # Flask API: POST /api/process (SVD lives here)
-│   └── requirements.txt
-└── svdcolour.py            # Original standalone SVD script this grew from
+├── api/
+│   └── index.py            # Flask API: POST /api/process (SVD lives here).
+│                           # In /api because Vercel serves it as a serverless function
+├── requirements.txt        # Python dependencies (root level, for Vercel)
+└── vercel.json             # Vercel build & routing config
 ```
 
 ## Running locally
@@ -56,9 +57,8 @@ You need **Node.js 20.19+** and **Python 3.9+**. Use two terminals.
 **Terminal 1 — backend:**
 
 ```bash
-cd backend
 pip install -r requirements.txt
-python app.py            # starts Flask on http://127.0.0.1:5000
+python api/index.py      # starts Flask on http://127.0.0.1:5000
 ```
 
 **Terminal 2 — frontend:**
@@ -98,6 +98,14 @@ Returns JSON:
 
 Uploads are downscaled to max 600 px on the longest side to keep the SVD fast and the response small.
 
-## Roadmap
+## Deploying to Vercel
 
-- [ ] Deploy to Vercel (frontend as static build, backend as a Python serverless function)
+The repo is pre-configured via `vercel.json`: the React app is built to static files and the Flask API runs as a Python serverless function.
+
+1. Push the repo to GitHub.
+2. Go to [vercel.com](https://vercel.com) → **Add New… → Project** → import the repo.
+3. Leave the settings as detected (`vercel.json` overrides them) and hit **Deploy**.
+
+Every future `git push` to `main` redeploys automatically.
+
+**Limits to know:** Vercel caps request bodies at ~4.5 MB, so very large photos may fail to upload (the backend downscales images, but only after receiving them). Serverless functions are also stateless — that's why the API does all SVD work in a single request instead of keeping state between calls.

@@ -1,0 +1,9 @@
+{
+  "$comment": "Vercel deployment config. Two jobs: (1) build the React app in frontend/ and serve its dist folder as the static site, (2) route requests correctly. Rewrites are checked in order AFTER real files: anything under /api/* goes to the Python serverless function (api/index.py, our Flask app - Flask then matches the full path like /api/process). Everything else falls back to index.html, which is required for a React Router SPA: without it, refreshing the browser on /view would 404 because no file called 'view' exists on the server.",
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

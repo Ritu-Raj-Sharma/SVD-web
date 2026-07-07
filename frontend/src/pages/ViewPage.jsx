@@ -5,10 +5,10 @@
 // WHAT HAPPENS HERE:
 //   1. On arrival, the uploaded image is POSTed ONCE to the Python backend
 //      (/api/process). The backend runs the SVD one time and sends back the
-//      original + a compressed version for ~14 different ranks, each with
+//      original + a compressed version for 14 different ranks, each with
 //      its storage stats.
 //   2. All of those versions are cached in the `data` state below.
-//   3. The slider just picks WHICH cached version to display — so dragging
+//   3. The slider just picks WHICH cached version to display, so dragging
 //      it updates the image AND the savings numbers instantly, with zero
 //      network requests. That is what makes it feel realtime.
 //
@@ -56,7 +56,7 @@ export default function ViewPage({ image, setImage }) {
         setIdx(Math.floor(json.results.length / 2))
       } catch (err) {
         if (err.name !== 'AbortError') {
-          setError('Could not reach the compression server. Is the backend running? (cd backend && python app.py)')
+          setError('Could not reach the compression server. Is the backend running? (python api/index.py)')
         }
       }
     }
@@ -160,11 +160,15 @@ export default function ViewPage({ image, setImage }) {
           <span className="stats__label">values stored (SVD) vs {data.originalValues.toLocaleString()} original</span>
         </div>
       </div>
-      {/* How the numbers are computed, so users understand the metric. */}
-      <p className="stats__note">
-        A rank-{current.rank} approximation stores r×(height + width + 1) numbers
-        per color channel instead of height×width — that's where the savings come from.
-      </p>
+      {/* Warning shown only when the rank is past the break-even point,
+          i.e. the SVD form needs MORE numbers than the raw image itself.
+          Break-even happens at r ≈ (h × w) / (h + w + 1). */}
+      {current.storagePct >= 100 && (
+        <p className="stats__warning">
+          ⚠ Rank {current.rank} is past the break-even point — at this rank the
+          SVD representation is larger than the original image, so nothing is saved.
+        </p>
+      )}
 
       <button className="btn btn--secondary" onClick={onUploadNew}>
         ← Upload a new image

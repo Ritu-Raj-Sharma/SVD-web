@@ -1,8 +1,14 @@
-# backend/app.py
+# api/index.py
 # =============================================================================
 # SVD IMAGE COMPRESSION - BACKEND API
 # =============================================================================
-# This is your original svdcolour.py logic, turned into a web API.
+# This file lives in /api because that's where Vercel looks for serverless
+# functions. Vercel detects the Flask `app` object below (a WSGI app) and
+# wraps it automatically: every request that reaches this function is handed
+# to Flask, which dispatches it to the matching @app.route.
+#
+# The SAME file also works as a normal local dev server - see the
+# `if __name__ == "__main__"` block at the bottom.
 #
 # HOW IT ACHIEVES "REALTIME" SLIDER UPDATES:
 # ------------------------------------------
@@ -12,17 +18,17 @@
 #   1. Frontend POSTs the image to /api/process (one single request).
 #   2. We compute the SVD of each color channel ONE time.
 #      (The expensive part - np.linalg.svd.)
-#   3. We then reconstruct the image at ~14 different ranks (cheap - just
+#   3. We then reconstruct the image at 14 different ranks (just
 #      matrix multiplications with slices of U, S, VT) and send ALL of them
 #      back, together with the storage stats for each rank.
 #   4. The frontend caches these in memory. Dragging the slider just swaps
-#      which cached image is shown -> instant, zero network delay.
+#      which cached image is shown which is instant, and zero network delay.
 #
-# THE MATH (same as your script):
+# THE MATH BEHIND SVD IMAGE COMPRESSION:
 #   For each channel X (h x w matrix):  X = U @ S @ VT       (full SVD)
 #   Rank-r approximation:               X_r = U[:, :r] @ S[:r, :r] @ VT[:r, :]
 #
-# STORAGE MATH (what the savings panel shows):
+# STORAGE MATH :
 #   Original image  : h * w numbers per channel
 #   Rank-r SVD form : r*(h + w + 1) numbers per channel
 #                     (r columns of U of length h, r rows of VT of length w,
@@ -100,12 +106,11 @@ def process_image():
     # Numbers needed to store the original (per all 3 channels):
     original_values = h * w * 3
 
-    # --- 3. Reconstruct the image at each chosen rank (cheap) ----------------
+    # --- 3. Reconstruct the image at each chosen rank ----------------
     results = []
     for r in pick_ranks(max_rank):
         channels = []
         for U, S, VT in svds:
-            # Same line as your script, S kept as a 1-D vector for speed:
             # (U[:, :r] * S[:r]) multiplies each column i of U by S[i],
             # which equals U[:, :r] @ np.diag(S[:r]) but avoids building
             # a big diagonal matrix.
@@ -115,7 +120,7 @@ def process_image():
         # Stack R,G,B back together, clip to valid pixel range, to uint8.
         X = np.clip(np.stack(channels, axis=-1), 0, 255).astype(np.uint8)
 
-        # Storage stats for this rank (see STORAGE MATH at top of file).
+        # Storage stats for this rank.
         svd_values = r * (h + w + 1) * 3
         storage_pct = svd_values / original_values * 100
         savings_pct = max(0.0, 100.0 - storage_pct)
@@ -140,6 +145,8 @@ def process_image():
 
 
 if __name__ == "__main__":
-    # Local development server. In production (Vercel) this file will be
-    # served as a serverless function instead.
+    # LOCAL DEVELOPMENT ONLY: `python api/index.py` starts Flask on port 5000
+    # (the Vite dev proxy forwards /api requests here).
+    # On Vercel this block never runs - Vercel imports `app` directly and
+    # serves it as a serverless function.
     app.run(host="127.0.0.1", port=5000, debug=True)

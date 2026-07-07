@@ -11,8 +11,6 @@ import App from './App.jsx'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  // StrictMode is a development-only helper that warns about unsafe patterns.
-  // It has zero effect on the production build.
   <React.StrictMode>
     {/* BrowserRouter enables client-side routing, so we can have different
         "pages" (URLs like / and /view) without full page reloads. */}
