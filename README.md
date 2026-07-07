@@ -2,6 +2,8 @@
 
 An interactive web app that compresses images using **Singular Value Decomposition (SVD)**. Upload any picture, drag a slider to change the compression rank, and watch the image quality and storage savings update in real time — with the original and compressed versions side by side.
 
+**🔗 Live demo: [svd-web.vercel.app](https://svd-web.vercel.app/)**
+
 ## How it works
 
 Every color image is three matrices (Red, Green, Blue). SVD factors each channel `X` into:
@@ -20,9 +22,9 @@ Small `r` → heavy compression, blurry image. Large `r` → near-perfect qualit
 
 **Storage math:** the original stores `h × w` numbers per channel, while the rank-r form stores only `r × (h + w + 1)` (r columns of U, r rows of Vᵀ, r singular values). The savings percentage shown in the app comes directly from this ratio.
 
-### Why the slider feels instant
+**Break-even point:** compression only pays off while `r × (h + w + 1) < h × w`, i.e. up to `r* = (h × w) / (h + w + 1)`. Past that rank the SVD form is *larger* than the raw image — the app shows a warning when the slider crosses this point.
 
-The expensive SVD runs **once per upload**. The backend then reconstructs the image at ~13 log-spaced ranks (1, 2, 4, 6, 10, …) and sends them all back in a single response. The frontend caches these, so moving the slider just swaps which cached version is displayed — no extra network calls.
+**Why the slider feels instant:** the expensive SVD runs once per upload. The backend reconstructs the image at ~14 log-spaced ranks (1, 2, 4, 6, 10, …) and sends them all back in a single response. The frontend caches these, so moving the slider just swaps which cached version is displayed — no extra network calls.
 
 ## Tech stack
 
@@ -31,81 +33,24 @@ The expensive SVD runs **once per upload**. The backend then reconstructs the im
 | Frontend | React 18, React Router, Vite, plain CSS      |
 | Backend  | Python, Flask, NumPy (SVD), Pillow (imaging) |
 
+Deployed on Vercel: the React app is served as a static build, and the Flask API runs as a Python serverless function.
+
 ## Project structure
 
 ```
 .
 ├── frontend/               # React single-page app
-│   ├── src/
-│   │   ├── App.jsx         # Routes + shared image state
-│   │   ├── pages/
-│   │   │   ├── UploadPage.jsx   # Page 1: pick / drag & drop an image
-│   │   │   └── ViewPage.jsx     # Page 2: slider, side-by-side view, savings
-│   │   └── index.css       # Light theme styles
-│   └── vite.config.js      # Dev proxy: /api → Flask on port 5000
+│   ├── index.html          # SPA shell; React renders into its #root div
+│   ├── vite.config.js      # Dev proxy: /api → Flask backend
+│   └── src/
+│       ├── main.jsx        # Entry point: mounts <App /> with the router
+│       ├── App.jsx         # Routes + shared image state
+│       ├── index.css       # Light theme styles
+│       └── pages/
+│           ├── UploadPage.jsx   # Page 1: pick / drag & drop (max 4.5 MB)
+│           └── ViewPage.jsx     # Page 2: slider, side-by-side view, savings
 ├── api/
-│   └── index.py            # Flask API: POST /api/process (SVD lives here).
-│                           # In /api because Vercel serves it as a serverless function
-├── requirements.txt        # Python dependencies (root level, for Vercel)
+│   └── index.py            # Flask API: POST /api/process (SVD lives here)
+├── requirements.txt        # Python dependencies
 └── vercel.json             # Vercel build & routing config
 ```
-
-## Running locally
-
-You need **Node.js 20.19+** and **Python 3.9+**. Use two terminals.
-
-**Terminal 1 — backend:**
-
-```bash
-pip install -r requirements.txt
-python api/index.py      # starts Flask on http://127.0.0.1:5000
-```
-
-**Terminal 2 — frontend:**
-
-```bash
-cd frontend
-npm install
-npm run dev              # starts Vite on http://localhost:5173
-```
-
-Open http://localhost:5173, upload an image, and drag the slider.
-
-## API
-
-`POST /api/process` — multipart form with an `image` file.
-
-Returns JSON:
-
-```json
-{
-  "width": 600,
-  "height": 400,
-  "maxRank": 400,
-  "originalValues": 720000,
-  "original": "data:image/jpeg;base64,...",
-  "results": [
-    {
-      "rank": 10,
-      "image": "data:image/jpeg;base64,...",
-      "svdValues": 30030,
-      "storagePct": 4.2,
-      "savingsPct": 95.8
-    }
-  ]
-}
-```
-
-Uploads are downscaled to max 600 px on the longest side to keep the SVD fast and the response small.
-
-## Deploying to Vercel
-
-The repo is pre-configured via `vercel.json`: the React app is built to static files and the Flask API runs as a Python serverless function.
-
-1. Push the repo to GitHub.
-2. Go to [vercel.com](https://vercel.com) → **Add New… → Project** → import the repo.
-3. Leave the settings as detected (`vercel.json` overrides them) and hit **Deploy**.
-
-Every future `git push` to `main` redeploys automatically.
-
-**Limits to know:** Vercel caps request bodies at ~4.5 MB, so very large photos may fail to upload (the backend downscales images, but only after receiving them). Serverless functions are also stateless — that's why the API does all SVD work in a single request instead of keeping state between calls.
