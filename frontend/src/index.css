@@ -22,9 +22,18 @@
 }
 
 body {
-  background: var(--bg);
+  /* Small grid-box pattern shared by ALL pages: two crossed sets of faint
+     lines drawn with repeating linear gradients over the light background. */
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 22px 22px;
   color: var(--text);
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  /* Base text size bumped from the browser default 16px to 18px;
+     all other sizes below are also +2px to match. */
+  font-size: 18px;
   min-height: 100vh;
 }
 
@@ -50,7 +59,7 @@ body {
 
 /* Plain, single-color heading — no gradient. */
 .header h1 {
-  font-size: 1.8rem;
+  font-size: 31px;
   font-weight: 700;
   color: var(--text);
 }
@@ -95,7 +104,7 @@ body {
 }
 
 .dropzone__formats {
-  font-size: 0.85rem;
+  font-size: 16px;
   margin-top: 6px;
   opacity: 0.8;
 }
@@ -108,7 +117,7 @@ body {
 
 .filename {
   color: var(--text-dim);
-  font-size: 0.9rem;
+  font-size: 16px;
 }
 
 /* --- Buttons --------------------------------------------------------------- */
@@ -119,7 +128,7 @@ body {
   border: none;
   border-radius: 8px;
   padding: 12px 40px;
-  font-size: 1rem;
+  font-size: 18px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
@@ -180,7 +189,7 @@ body {
 
 .compare__card figcaption {
   color: var(--text-dim);
-  font-size: 0.9rem;
+  font-size: 16px;
   font-weight: 600;
 }
 
@@ -199,7 +208,7 @@ body {
 }
 
 .slider-block label {
-  font-size: 1rem;
+  font-size: 18px;
 }
 
 .slider-block input[type='range'] {
@@ -212,7 +221,7 @@ body {
   display: flex;
   justify-content: space-between;
   color: var(--text-dim);
-  font-size: 0.8rem;
+  font-size: 15px;
 }
 
 /* --- Storage savings panel --------------------------------------------------- */
@@ -240,7 +249,7 @@ body {
 }
 
 .stats__value {
-  font-size: 1.6rem;
+  font-size: 28px;
   font-weight: 700;
 }
 
@@ -250,7 +259,7 @@ body {
 
 .stats__label {
   color: var(--text-dim);
-  font-size: 0.85rem;
+  font-size: 16px;
 }
 
 /* Amber warning shown when the chosen rank is past the break-even point
@@ -261,22 +270,12 @@ body {
   border: 1px solid #f0d9a8;
   border-radius: 8px;
   padding: 10px 16px;
-  font-size: 0.85rem;
+  font-size: 16px;
   text-align: center;
   max-width: 640px;
 }
 
 /* --- Home / landing page ----------------------------------------------------- */
-
-/* Subtle grid-box background: two crossed sets of faint lines drawn with
-   repeating linear gradients, fading out toward the bottom via a mask. */
-.home {
-  min-height: 100vh;
-  background-image:
-    linear-gradient(var(--border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border) 1px, transparent 1px);
-  background-size: 22px 22px;
-}
 
 .home__intro {
   max-width: 640px;
@@ -285,16 +284,17 @@ body {
   color: var(--text);
 }
 
-/* Demo comparison images: capped height so portrait photos don't make
-   the cards too tall/rectangular. */
+/* Demo comparison: full page width (two ~480px cards side by side)
+   so the quality difference between the images is easy to see. */
 .compare--demo {
-  max-width: 640px;
+  max-width: 100%;
 }
 
-.compare--demo img {
-  max-height: 260px;
-  width: auto;
-  max-width: 100%;
+/* Section heading above the use-case cards. */
+.home__section-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 8px;
 }
 
 /* Three application cards in a responsive row. */
@@ -326,19 +326,19 @@ body {
 }
 
 .home__app h3 {
-  font-size: 1rem;
+  font-size: 18px;
   margin-bottom: 6px;
 }
 
 .home__app p {
   color: var(--text-dim);
-  font-size: 0.85rem;
+  font-size: 16px;
   line-height: 1.5;
 }
 
 /* Bigger call-to-action variant of the standard button. */
 .btn--large {
-  font-size: 1.1rem;
+  font-size: 20px;
   padding: 14px 48px;
 }
 

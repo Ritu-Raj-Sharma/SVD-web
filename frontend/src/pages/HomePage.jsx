@@ -1,9 +1,10 @@
 // src/pages/HomePage.jsx
 // -----------------------------------------------------------------------------
 // LANDING PAGE — the first thing a visitor sees.
-// Gives a short intro to SVD compression, shows a real before/after example
-// (dog.jpeg compressed at rank 23), lists a few practical applications,
-// and ends with a "Try it yourself" button → /upload.
+// Gives a short intro to SVD compression with a "Try it yourself" button
+// (kept above the fold so visitors don't have to scroll to find it),
+// then a real before/after example (Sunset.jpeg compressed at rank 23)
+// and a few practical applications.
 //
 // The two demo images are pre-generated (real SVD output, not a mockup) and
 // bundled by Vite at build time via the imports below.
@@ -16,9 +17,7 @@ export default function HomePage() {
   const navigate = useNavigate()
 
   return (
-    // .home adds the subtle grid-box background (see index.css)
-    <div className="home">
-      <div className="page page--wide">
+    <div className="page page--wide">
         <header className="header">
           <h1>SVD Image Compression</h1>
           <p className="subtitle">
@@ -36,19 +35,26 @@ export default function HomePage() {
           remarkably close to the original.
         </p>
 
+        {/* Call to action right after the intro, so visitors see it without
+            scrolling to the bottom of the page. */}
+        <button className="btn btn--large" onClick={() => navigate('/upload')}>
+          Try it yourself →
+        </button>
+
         {/* Real example: original vs rank-23 reconstruction */}
         <div className="compare compare--demo">
           <figure className="compare__card">
             <img src={demoOriginal} alt="original demo" />
-            <figcaption>Original — all 236 layers</figcaption>
+            <figcaption>Original — all 287 layers</figcaption>
           </figure>
           <figure className="compare__card">
             <img src={demoRank23} alt="rank 23 demo" />
-            <figcaption>Only 23 layers — 85% less data</figcaption>
+            <figcaption>Only 23 layers — 88% less data</figcaption>
           </figure>
         </div>
 
         {/* Practical applications, kept to three quick cards */}
+        <h2 className="home__section-title">Where SVD is used in real life</h2>
         <div className="home__apps">
           <div className="home__app">
             <span className="home__app-icon">📦</span>
@@ -66,12 +72,6 @@ export default function HomePage() {
             <p>Recommender systems and PCA use the same trick to find the few patterns that explain most of the data.</p>
           </div>
         </div>
-
-        {/* Call to action → upload page */}
-        <button className="btn btn--large" onClick={() => navigate('/upload')}>
-          Try it yourself →
-        </button>
-      </div>
     </div>
   )
 }
