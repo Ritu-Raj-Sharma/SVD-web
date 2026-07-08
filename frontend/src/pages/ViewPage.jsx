@@ -70,7 +70,7 @@ export default function ViewPage({ image, setImage }) {
   const onUploadNew = () => {
     URL.revokeObjectURL(image.url)
     setImage(null)
-    navigate('/')
+    navigate('/upload')
   }
 
   // --- Render: error state ---------------------------------------------------

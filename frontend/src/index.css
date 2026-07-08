@@ -266,6 +266,82 @@ body {
   max-width: 640px;
 }
 
+/* --- Home / landing page ----------------------------------------------------- */
+
+/* Subtle grid-box background: two crossed sets of faint lines drawn with
+   repeating linear gradients, fading out toward the bottom via a mask. */
+.home {
+  min-height: 100vh;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.home__intro {
+  max-width: 640px;
+  text-align: center;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+/* Demo comparison images: capped height so portrait photos don't make
+   the cards too tall/rectangular. */
+.compare--demo {
+  max-width: 640px;
+}
+
+.compare--demo img {
+  max-height: 260px;
+  width: auto;
+  max-width: 100%;
+}
+
+/* Three application cards in a responsive row. */
+.home__apps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+@media (max-width: 700px) {
+  .home__apps {
+    grid-template-columns: 1fr;
+  }
+}
+
+.home__app {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.home__app-icon {
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.home__app h3 {
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.home__app p {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+/* Bigger call-to-action variant of the standard button. */
+.btn--large {
+  font-size: 1.1rem;
+  padding: 14px 48px;
+}
+
 /* --- Misc ------------------------------------------------------------------- */
 
 .error {

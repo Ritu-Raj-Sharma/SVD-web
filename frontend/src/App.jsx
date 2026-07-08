@@ -10,6 +10,7 @@
 // -----------------------------------------------------------------------------
 import { useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
+import HomePage from './pages/HomePage.jsx'
 import UploadPage from './pages/UploadPage.jsx'
 import ViewPage from './pages/ViewPage.jsx'
 
@@ -24,16 +25,19 @@ export default function App() {
 
   return (
     <Routes>
-      {/* Page 1: upload form. We pass setImage down so the page can store
+      {/* Landing page: intro, rank-23 demo, applications, CTA → /upload */}
+      <Route path="/" element={<HomePage />} />
+
+      {/* Upload form. We pass setImage down so the page can store
           the chosen file in this shared state before navigating away. */}
-      <Route path="/" element={<UploadPage setImage={setImage} />} />
+      <Route path="/upload" element={<UploadPage setImage={setImage} />} />
 
       {/* Page 2: view the uploaded image.
           Guard: if the user lands on /view directly (e.g. refresh or typed
           URL) with no image in state, bounce them back to the upload page. */}
       <Route
         path="/view"
-        element={image ? <ViewPage image={image} setImage={setImage} /> : <Navigate to="/" replace />}
+        element={image ? <ViewPage image={image} setImage={setImage} /> : <Navigate to="/upload" replace />}
       />
 
       {/* Catch-all: any unknown URL redirects to the upload page. */}
