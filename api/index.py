@@ -1,14 +1,6 @@
 # api/index.py
 # =============================================================================
 # SVD IMAGE COMPRESSION - BACKEND API
-# =============================================================================
-# This file lives in /api because that's where Vercel looks for serverless
-# functions. Vercel detects the Flask `app` object below (a WSGI app) and
-# wraps it automatically: every request that reaches this function is handed
-# to Flask, which dispatches it to the matching @app.route.
-#
-# The SAME file also works as a normal local dev server - see the
-# `if __name__ == "__main__"` block at the bottom.
 #
 # HOW IT ACHIEVES "REALTIME" SLIDER UPDATES:
 # ------------------------------------------
@@ -45,13 +37,11 @@ from flask_cors import CORS
 from PIL import Image
 
 app = Flask(__name__)
-# CORS allows the React dev server (port 5173) to call this API (port 5000).
 CORS(app)
 
 # --- Tunables ----------------------------------------------------------------
 MAX_DIM = 600       # Images are downscaled so the longest side is <= 600 px.
-                    # Keeps the SVD fast and the response payload small,
-                    # while still looking good on screen.
+                    # Keeps the SVD fast and the response payload small.
 JPEG_QUALITY = 85   # Quality of the JPEGs we send back to the browser.
 NUM_RANKS = 14      # How many rank "steps" the slider will have.
 
@@ -60,9 +50,6 @@ def pick_ranks(max_rank: int, count: int = NUM_RANKS) -> list[int]:
     """
     Choose ~`count` rank values between 1 and max_rank, spaced
     LOGARITHMICALLY (1, 2, 3, 5, 8, 13, 21, ...).
-
-    Why log spacing? Image quality improves very fast at low ranks and very
-    slowly at high ranks, so small ranks deserve more slider steps.
     """
     ranks = np.logspace(0, np.log10(max_rank), count)   # floats, log-spaced
     ranks = np.unique(np.round(ranks).astype(int))      # ints, no duplicates
@@ -72,8 +59,6 @@ def pick_ranks(max_rank: int, count: int = NUM_RANKS) -> list[int]:
 def to_data_url(arr: np.ndarray) -> str:
     """
     Convert a (h, w, 3) uint8 numpy array into a base64 'data URL' string.
-    The browser can put this string directly into <img src=...> - no need
-    to host image files anywhere.
     """
     buf = io.BytesIO()
     Image.fromarray(arr).save(buf, format="JPEG", quality=JPEG_QUALITY)
@@ -95,7 +80,7 @@ def process_image():
     img = Image.open(request.files["image"].stream).convert("RGB")
     img.thumbnail((MAX_DIM, MAX_DIM))       # downscale in place, keeps aspect
 
-    A = np.asarray(img, dtype=np.float64)   # shape (h, w, 3), like your script
+    A = np.asarray(img, dtype=np.float64)
     h, w, _ = A.shape
     max_rank = min(h, w)                    # SVD rank can't exceed min(h, w)
 

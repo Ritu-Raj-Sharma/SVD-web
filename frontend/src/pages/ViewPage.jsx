@@ -11,9 +11,6 @@
 //   3. The slider just picks WHICH cached version to display, so dragging
 //      it updates the image AND the savings numbers instantly, with zero
 //      network requests. That is what makes it feel realtime.
-//
-// LAYOUT: original and rank-r image side by side, slider under them,
-// storage-savings panel at the bottom.
 // -----------------------------------------------------------------------------
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -25,8 +22,7 @@ export default function ViewPage({ image, setImage }) {
   const [data, setData] = useState(null)
   // Error message if the backend call fails (e.g. backend not running).
   const [error, setError] = useState(null)
-  // Which entry of data.results the slider currently points at.
-  // Start in the middle so the first thing the user sees is a visible
+  // Slider starts in the middle so the first thing the user sees is a visible
   // difference between original and compressed.
   const [idx, setIdx] = useState(0)
 

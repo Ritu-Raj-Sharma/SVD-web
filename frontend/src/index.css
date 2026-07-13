@@ -5,14 +5,14 @@
 
 /* CSS variables = one place to change the theme later. */
 :root {
-  --bg: #f5f6f8;          /* light page background */
-  --surface: #ffffff;     /* cards / drop zone background */
-  --border: #dfe3ea;      /* subtle borders */
-  --text: #1f2430;        /* main text */
-  --text-dim: #6b7280;    /* secondary text */
-  --accent: #2f6fed;      /* buttons / highlights (single flat blue) */
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --border: #dfe3ea;
+  --text: #1f2430;
+  --text-dim: #6b7280;
+  --accent: #2f6fed;
   --accent-hover: #235bd0;
-  --good: #188a53;        /* green for the "storage saved" number */
+  --good: #188a53;
 }
 
 * {

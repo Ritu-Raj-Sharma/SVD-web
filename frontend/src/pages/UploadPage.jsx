@@ -4,10 +4,6 @@
 // The user picks an image file (click or drag & drop), sees a small preview,
 // then hits "Upload". That stores the image in App's shared state and
 // navigates to /view (Page 2).
-//
-// Note: at this stage nothing is sent to a server — "upload" just means
-// "hand the file to the app". Later, this is where we'll POST the file to the
-// Python (SVD) backend.
 // -----------------------------------------------------------------------------
 import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
